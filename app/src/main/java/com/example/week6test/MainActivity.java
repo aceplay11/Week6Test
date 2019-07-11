@@ -35,14 +35,21 @@ playfully, as if to convey secrecy.
         switch (view.getId()) {
             case R.id.btnTranslate:
                 String text = etEnglish.getText().toString();
-                String newText = translateToPigLatin(text);
-                //Log.d("TAG", newText);
-                tvPigLatin.setText(newText);
+                String[] allStrings = text.split(" ");
+                String fullString = "";
+                for (int i = 0; i < allStrings.length; i++) {
+                    String temp = translateToPigLatin(allStrings[i]);
+                    fullString += temp;
+                }
+
+                tvPigLatin.setText(fullString);
+                etEnglish.getText().clear();
                 break;
 
             case R.id.btnVirtusa:
                 Intent intent = new Intent(this, VirtusaActivity.class);
                 startActivity(intent);
+                break;
         }
     }
 
@@ -94,27 +101,21 @@ playfully, as if to convey secrecy.
     }
 
     public String translateToPigLatin(String string) {
-        String[] allStrings = string.split(" ");
-        //Log.d("TAG", allStrings[0] +" "+ allStrings[1]);
 
-        StringBuilder stringPig = new StringBuilder();
-
-        for (int i = 0; i < allStrings.length - 1; i++) {
-            String temp = allStrings[i];
-
-
-            for (int j = 0; j < allStrings[j].length() - 1; j++) {
-
-
-                if (!isVowel(temp.charAt(j))) {
-
-
-                    String[] newTemp = temp.split(String.valueOf(temp.charAt(i)));
-                    stringPig.append(newTemp[1] + newTemp[0] + "ay ");
-                }
+        int index = -1;
+        for (int j = 0; j < string.length(); j++) {
+            if (isVowel(string.charAt(j))) {
+                index = j;
+                break;
             }
         }
 
-        return String.valueOf(stringPig);
+
+        String end = string.substring(index);
+        String beginning = string.substring(0, index);
+        String stringPig = end + beginning + "ay ";
+        Log.d("TAG", stringPig);
+
+        return stringPig;
     }
 }
